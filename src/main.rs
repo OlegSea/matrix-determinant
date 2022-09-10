@@ -22,30 +22,28 @@ fn define_matrix() -> Matrix {
 fn calculate_determinant(matrix: Matrix) -> f32 {
     match matrix.len() {
         1 => matrix[0][0],
-        _ => {
-            matrix[0]
-                .iter()
-                .enumerate()
-                .map(|(index, value)| {
-                    (-1.0f32).powf((index % 2) as f32)
-                        * value
-                        * calculate_determinant(
-                            matrix[1..]
-                                .to_vec()
-                                .iter()
-                                .map(|row| {
-                                    row.iter()
-                                        .enumerate()
-                                        .filter(|(column, &_)| column != &index)
-                                        .map(|(_, &value)| value)
-                                        .collect()
-                                })
-                                .map(|vec: Vec<f32>| vec)
-                                .collect(),
-                        )
-                })
-                .sum()
-        }
+        _ => matrix[0]
+            .iter()
+            .enumerate()
+            .map(|(index, value)| {
+                (-1.0f32).powf((index % 2) as f32)
+                    * value
+                    * calculate_determinant(
+                        matrix[1..]
+                            .to_vec()
+                            .iter()
+                            .map(|row| {
+                                row.iter()
+                                    .enumerate()
+                                    .filter(|(column, &_)| column != &index)
+                                    .map(|(_, &value)| value)
+                                    .collect()
+                            })
+                            .map(|vec: Vec<f32>| vec)
+                            .collect(),
+                    )
+            })
+            .sum(),
     }
 }
 
