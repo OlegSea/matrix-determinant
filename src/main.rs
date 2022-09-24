@@ -19,7 +19,7 @@ fn define_matrix() -> Matrix {
     matrix
 }
 
-fn calculate_determinant(matrix: Matrix) -> f32 {
+fn calculate_determinant_ref(matrix: &Matrix) -> f32 {
     match matrix.len() {
         1 => matrix[0][0],
         _ => matrix[0]
@@ -28,10 +28,10 @@ fn calculate_determinant(matrix: Matrix) -> f32 {
             .map(|(index, value)| {
                 (-1.0f32).powf((index % 2) as f32)
                     * value
-                    * calculate_determinant(
-                        matrix[1..]
+                    * calculate_determinant_ref(
+                        &matrix[1..]
                             .to_vec()
-                            .iter()
+                            .into_iter()
                             .map(|row| {
                                 row.iter()
                                     .enumerate()
@@ -40,7 +40,7 @@ fn calculate_determinant(matrix: Matrix) -> f32 {
                                     .collect()
                             })
                             .map(|vec: Vec<f32>| vec)
-                            .collect(),
+                            .collect::<Matrix>(),
                     )
             })
             .sum(),
@@ -49,6 +49,6 @@ fn calculate_determinant(matrix: Matrix) -> f32 {
 
 fn main() {
     let matrix = define_matrix();
-    let determinant = calculate_determinant(matrix);
+    let determinant = calculate_determinant_ref(&matrix);
     println!("{}", determinant);
 }
